@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+{% block title %} Optimus-AI {% endblock %}
+{% block body %}
+
+
+<!-- Main Container -->
+<div class="main-container">
+  <!-- Navigation and Auth Buttons -->
+  <div class="top-nav">
+    {% if user %}
+    <div class="nav-left">
+          <a href="{{url_for('dashboard')}}" style="text-decoration: none;">
+          <h class="prime-logo">PRAIME</h4><br>
+          </a>
+    </div>
+
+   
+      <div class="nav-right auth-buttons">
+        <span class="welcome-user"><b>{{ username }}</b></span>
+         <a href="{{ url_for('dashboard') }}">
+        <a href="{{url_for('logout')}}" class="btn-logout">Logout</a>
+        </a> 
+      </div>
+    
+
+  
+    </a>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}">
+      <div class="nav-right auth-buttons">
+        <a href="/signin" class="btn-signin">Sign in</a>
+        <a href="/signup" class="btn-signup">Sign up</a>
+      </div>
+    </a>
+    {% endif %}
+
+  </div>
+
+  <!-- Search Container -->
+  <div class="search-container">
+    <div class="search-box">
+     
+      <form method="POST" class="search-input-container" enctype="multipart/form-data">
+        <div class="attach-wrapper">
+          <button type="button" title="Attach files" onclick="toggleDropdown()" class="search-attach-btn">
+            <span>&#xFF0B;</span>
+          </button>
+          <div class="dropdown" id="dropdownMenu">
+            <a href="#" onclick="triggerFileUpload()" class="dropdown-item">
+              <span class="dropdown-icon">📄</span> Upload Text File
+            </a>
+          </div>
+        </div>
+        
+        <input type="text" name="prompt" class="search-input" title="Please ask something"
+          placeholder="Enter Prompt here">
+
+        <button type="submit" class="submit-btn" style="font-weight: bold;">
+          <i class="fas fa-arrow-up"></i>
+        </button>
+      </form>
+      <div class="search-options">
+        <div class="search-modes">
+          <button class="mode-btn">
+            <span class="mode-icon">🔍</span> DeepSearch
+          </button>
+          <button class="mode-btn">
+            <span class="mode-icon">🤔</span> Think
+          </button>
+        </div>
+        <div class="right-controls">
+          <div class="model-selector">
+            prAIme <span class="dropdown-icon">▼</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <a href="#" class="quick-action">
+      <span class="quick-action-icon">🖼️</span> Create Images
+    </a>
+    <a href="#" class="quick-action">
+      <span class="quick-action-icon">🔍</span> Research
+    </a>
+    <a href="#" class="quick-action">
+      <span class="quick-action-icon">✂️</span> Edit Image
+    </a>
+
+  </div>
+
+  <!-- Response Display -->
+  {% if prompt %}
+  <div class="prompt-display">
+    {{prompt}}
+  </div>
+  {% endif %}
+
+  {% if response %}
+  <div class="response-display">
+    {{ response | safe }}
+  </div>
+  {% endif %}
+
+  <div class="footer">
+    By messaging PRAIME, you agree to our privacy and Policy
+    <br>
+
+    <a href="https://www.instagram.com/_shaikh_hamza_20/" class="social-insta" target="_blank" rel="noopener noreferrer"
+      title="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+    <a href="https://github.com/Hmzask?tab=repositories" class="social-git" target="_blank" rel="noopener noreferrer"
+      title="GitHub">
+      <i class="fab fa-github"></i>
+    </a>
+
+    <a href="https://x.com/Za_Sk20" class="social-twitter" target="_blank" rel="noopener noreferrer" title="Twitter">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <br>
+
+  </div>
+</div>
+
+
+
+{% endblock %}
