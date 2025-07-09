@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %} Optimus-AI {% endblock %}
+{% block title %} G.O.A.T {% endblock %}
 {% block body %}
 
 
@@ -10,15 +10,14 @@
     {% if user %}
     <div class="nav-left">
           <a href="{{url_for('dashboard')}}" style="text-decoration: none;">
-          <h class="prime-logo">PRAIME</h4><br>
+          <h class="prime-logo">G.O.A.T</h4><br>
           </a>
     </div>
 
    
       <div class="nav-right auth-buttons">
         <span class="welcome-user"><b>{{ username }}</b></span>
-         <a href="{{ url_for('dashboard') }}">
-        <a href="{{url_for('logout')}}" class="btn-logout">Logout</a>
+         <a href="{{url_for('logout')}}" class="btn-logout">Logout</a>
         </a> 
       </div>
     
@@ -106,7 +105,7 @@
   {% endif %}
 
   <div class="footer">
-    By messaging PRAIME, you agree to our privacy and Policy
+    By messaging G.O.A.T-AI, you agree to our privacy and Policy
     <br>
 
     <a href="https://www.instagram.com/_shaikh_hamza_20/" class="social-insta" target="_blank" rel="noopener noreferrer"

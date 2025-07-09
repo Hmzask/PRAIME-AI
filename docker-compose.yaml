@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: prime_base
+      POSTGRES_USER: myapp_user
+      POSTGRES_PASSWORD: root
+
+  web:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      - SECRET_KEY=4f0f7ac605d205adf928bce759ab3063
+      - API_KEY=yAIzaSyBiSDt1SUXHJafndDUVz58HVHSj5kTFR6k
+      - CLIENT_ID=77799347025-39rtbq93kjuoud3s5k0dcrc9qv9j22ef.apps.googleusercontent.com
+      - CLIENT_SECRET=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
