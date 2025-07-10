@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 #---------------------------------------------INITIALIZATION---------------------------------------------
 
 app = Flask(__name__) 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@localhost:5432/prime_base"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
 app.config['SQLALCHEMY_BINDS'] = {'sqlite_db': 'sqlite:///demo.db'}
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
@@ -36,6 +36,7 @@ class User_cred(db.Model):
             'username': self.username,
             'email': self.email,
             'auth_provider': self.auth_provider,
+            'google_id':self.google_id,
             'is_active': self.is_active
         }
 

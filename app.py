@@ -20,7 +20,7 @@ secret_key = os.environ.get('SECRET_KEY')
 app.config["SECRET_KEY"] = secret_key 
 app.config["SESSION_PERMANENT"] = False 
 app.config["SESSION_TYPE"] = "filesystem" 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@localhost:5432/prime_base"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
 app.config['SQLALCHEMY_BINDS'] = {'sqlite_db': 'sqlite:///demo.db'}
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -110,18 +110,16 @@ def generate_comparison_table(data):
     return table_md
 
 def hash_password(password):
-    """Simple password hashing - in production use proper hashing like bcrypt"""
     return hashlib.sha256(password.encode()).hexdigest()
 
 @app.route('/auth/callback')
 def callback():
     try:
         token = google.authorize_access_token()
-        print("✅ Got access token:", token)
+        # print("✅ Got access token:", token) Enable this if you want to.
         user_info = token['userinfo']
         print(f"user_info {user_info}")
         
-        # Check if user exists in database
         user = User_cred.query.filter_by(email=user_info['email']).first()
         
         if not user:
@@ -134,7 +132,7 @@ def callback():
                 email=user_info['email'],
                 password=None,  # OAuth users don't have passwords
                 auth_provider='google',
-                google_id=user_info.get('id'),
+                google_id=user_info.get('sub'),
                 
             )
             print("Creating user with:")
