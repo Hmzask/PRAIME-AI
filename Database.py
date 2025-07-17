@@ -2,20 +2,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-#---------------------------------------------INITIALIZATION---------------------------------------------
-
-app = Flask(__name__) 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
-app.config['SQLALCHEMY_BINDS'] = {'sqlite_db': 'sqlite:///demo.db'}
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 #---------------------------------------------DATABASE SCHEMA---------------------------------------------
 
 class User_cred(db.Model):
     __tablename__ = 'user_credentials'
     
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(50), nullable=False)
     lastname = db.Column(db.String(50), nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -25,22 +19,30 @@ class User_cred(db.Model):
     google_id = db.Column(db.String(100), unique=True, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     
-    def __repr__(self):
-        return f'<User {self.email}>'
+
+class User_prompt(db.Model):
+    __tablename__ = 'user_prompts'
+
+    prompt_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_credentials.user_id'),nullable=False)
+    prompt = db.Column(db.Text, nullable=False)
+    response = db.Column(db.Text, nullable=True)
+
     
     def to_dict(self):
         return {
-            'id': self.id,
+            'user_id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
             'username': self.username,
             'email': self.email,
             'auth_provider': self.auth_provider,
             'google_id':self.google_id,
-            'is_active': self.is_active
+            'is_active': self.is_active,
+            'prompt_id': self.prompt_id,
+            'prompt':self.prompt
         }
 
-with app.app_context():
-        db.create_all()
+
         
 

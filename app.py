@@ -7,21 +7,22 @@ from markdown import markdown
 import os 
 import re
 from authlib.integrations.flask_client import OAuth
-from Database import User_cred, db, app 
+from Database import User_cred, db
 import hashlib
 from dotenv import load_dotenv
 import traceback
+from api import api
 
 
 #---------------------------------------------INITIALIZATION---------------------------------------------------------------------
 load_dotenv()
 app = Flask(__name__) 
+app.register_blueprint(api)
 secret_key = os.environ.get('SECRET_KEY') 
 app.config["SECRET_KEY"] = secret_key 
 app.config["SESSION_PERMANENT"] = False 
 app.config["SESSION_TYPE"] = "filesystem" 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
-app.config['SQLALCHEMY_BINDS'] = {'sqlite_db': 'sqlite:///demo.db'}
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@127.0.0.1:5432/prime_base"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 oauth = OAuth(app)
@@ -116,12 +117,12 @@ def hash_password(password):
 def callback():
     try:
         token = google.authorize_access_token()
-        # print("✅ Got access token:", token) Enable this if you want to.
+        # print(" Got access token:", token) Enable this if you want to.
         user_info = token['userinfo']
         print(f"user_info {user_info}")
         
         user = User_cred.query.filter_by(email=user_info['email']).first()
-        
+
         if not user:
             print("New user, adding to DB")
             # Create new user from Google profile
@@ -135,21 +136,14 @@ def callback():
                 google_id=user_info.get('sub'),
                 
             )
-            print("Creating user with:")
-            print("  firstname:", user_info.get('given_name', ''))
-            print("  lastname:", user_info.get('family_name', ''))
-            print("  username:", user_info.get('email'))
-            print("  email:", user_info['email'])
-            print("  google_id:", user_info.get('id'))
 
             db.session.add(user)
             db.session.commit()
             flash("Account created successfully via Google!", "success")
         else:
             # Update existing user's Google ID if not set
-            print("Updating googleID")
             if not user.google_id:
-                user.google_id = user_info.get('id')
+                user.google_id = user_info.get('sub')
                 user.auth_provider = 'google'
                 db.session.commit()
                 print("user added to DB")
@@ -161,7 +155,6 @@ def callback():
         session['auth_method'] = 'google'
         session['user_firstname'] = user.firstname
         
-        flash(f"Welcome back, {user.firstname}!", "success")
         return redirect(url_for('dashboard'))
         
     except Exception as e:
@@ -169,7 +162,6 @@ def callback():
         print("Google OAuth DB error:", str(e))
         flash(f"Authentication failed: {str(e)}", "error")
         return redirect(url_for('signin'))
-
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
@@ -201,7 +193,7 @@ def signin():
 
 @app.route('/auth/google')
 def google_signin():
-    redirect_uri = redirect_uri = request.host_url.rstrip('/') + url_for('callback')
+    redirect_uri = request.host_url.rstrip('/') + url_for('callback')
     print("Redirect URI:", redirect_uri)  # Debug print
     return google.authorize_redirect(redirect_uri)
 
@@ -230,10 +222,10 @@ def signup():
                 flash("Username already exists", "error")
             return render_template('signup.html')
         
-        try:
+        
             # Create new user
-            hashed_password = hash_password(form_data['password'])
-            new_user = User_cred(
+        hashed_password = hash_password(form_data['password'])
+        new_user = User_cred(
                 firstname=form_data['firstname'],
                 lastname=form_data['lastname'],
                 username=form_data['username'],
@@ -243,16 +235,12 @@ def signup():
                 
             )
             
-            db.session.add(new_user)
-            db.session.commit()
+        db.session.add(new_user)
+        db.session.commit()
             
-            flash("Account created successfully! Please sign in.", "success")
-            return redirect(url_for('signin'))
+        flash("Account created successfully! Please sign in.", "success")
+        return redirect(url_for('signin'))
             
-        except Exception as e:
-            db.session.rollback()
-            flash(f"An error occurred: {str(e)}", "error")
-            return render_template('signup.html')
     
     return render_template('signup.html')
 
@@ -295,8 +283,31 @@ def dashboard():
         except Exception as e:
             flash(f"Error generating response: {str(e)}", "error")
             return render_template('dashboard.html', user=user, username=username, user_firstname=user_firstname)
+        
     
     return render_template('dashboard.html', user=user, username=username, user_firstname=user_firstname)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.errorhandler(404)
 def not_found(error):
