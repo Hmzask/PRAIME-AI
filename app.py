@@ -22,7 +22,7 @@ secret_key = os.environ.get('SECRET_KEY')
 app.config["SECRET_KEY"] = secret_key 
 app.config["SESSION_PERMANENT"] = False 
 app.config["SESSION_TYPE"] = "filesystem" 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 oauth = OAuth(app)

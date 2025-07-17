@@ -5,3 +5,6 @@ services:
     repo: https://github.com/Hmzask/PRAIME-AI
     region: oregon
     plan: free
+     envVars:
+      - key: DATABASE_URL
+        value: postgresql://prime_base_user:TGXNODGTNoIc99D0DqERjoFOTxUN1lkl@dpg-d1sbthbuibrs73a8ook0-a:5432/prime_base
