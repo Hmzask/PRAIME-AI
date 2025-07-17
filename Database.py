@@ -9,7 +9,7 @@ db = SQLAlchemy()
 class User_cred(db.Model):
     __tablename__ = 'user_credentials'
     
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(50), nullable=False)
     lastname = db.Column(db.String(50), nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -20,18 +20,18 @@ class User_cred(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     
 
-class User_prompt(db.Model):
-    __tablename__ = 'user_prompts'
+# class User_prompt(db.Model):
+#     __tablename__ = 'user_prompts'
 
-    prompt_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user_credentials.user_id'),nullable=False)
-    prompt = db.Column(db.Text, nullable=False)
-    response = db.Column(db.Text, nullable=True)
+#     prompt_id = db.Column(db.Integer, primary_key=True)
+#     id = db.Column(db.Integer, db.ForeignKey('user_credentials.d'),nullable=False)
+#     prompt = db.Column(db.Text, nullable=False)
+#     response = db.Column(db.Text, nullable=True)
 
     
     def to_dict(self):
         return {
-            'user_id': self.id,
+            'id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
             'username': self.username,
@@ -39,8 +39,6 @@ class User_prompt(db.Model):
             'auth_provider': self.auth_provider,
             'google_id':self.google_id,
             'is_active': self.is_active,
-            'prompt_id': self.prompt_id,
-            'prompt':self.prompt
         }
 
 

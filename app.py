@@ -22,7 +22,7 @@ secret_key = os.environ.get('SECRET_KEY')
 app.config["SECRET_KEY"] = secret_key 
 app.config["SESSION_PERMANENT"] = False 
 app.config["SESSION_TYPE"] = "filesystem" 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@127.0.0.1:5432/prime_base"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_user:root@postgres:5432/prime_base"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 oauth = OAuth(app)
@@ -149,7 +149,7 @@ def callback():
                 print("user added to DB")
         
         # Set session variables consistently
-        session['user_id'] = user.id
+        session['user_id'] = user.id # This user_id is database field.
         session['username'] = user.username
         session['signin_user'] = user.email
         session['auth_method'] = 'google'
