@@ -7,4 +7,7 @@ services:
     plan: free
      envVars:
       - key: DATABASE_URL
+      - key: CLIENT_SECRET
+      - key: CLIENT_ID
+      - key: API_KEY
        
